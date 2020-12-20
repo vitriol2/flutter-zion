@@ -15,7 +15,7 @@ class _CountriesFieldState extends State<CountriesField>{
 
   OverlayEntry _overlayEntry;
 
-  FinalLink
+//  FinalLink
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _CountriesFieldState extends State<CountriesField>{
 //        top: offset.dy + size.height + 5.0,
           width: size.width,
           child: CompositedTransformFollower(
-            link: this._layerLink,
+//            link: this._layerLink,
             showWhenUnlinked: false,
             offset: Offset(0.0, size.height + 5.0),
             child: Material(
