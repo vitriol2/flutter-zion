@@ -57,6 +57,7 @@ class _EditImagePageState extends State<EditImagePage>{
                     )
                   );
                 },
+
               ),
             ),
             SizedBox(height: 40,),
@@ -93,3 +94,4 @@ class _EditImagePageState extends State<EditImagePage>{
     );
   }
 }
+

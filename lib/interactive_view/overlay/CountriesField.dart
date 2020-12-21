@@ -15,7 +15,7 @@ class _CountriesFieldState extends State<CountriesField>{
 
   OverlayEntry _overlayEntry;
 
-//  FinalLink
+  final LayerLink _layerLink = LayerLink();
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _CountriesFieldState extends State<CountriesField>{
 //        top: offset.dy + size.height + 5.0,
           width: size.width,
           child: CompositedTransformFollower(
-//            link: this._layerLink,
+            link: this._layerLink,
             showWhenUnlinked: false,
             offset: Offset(0.0, size.height + 5.0),
             child: Material(
@@ -71,10 +71,13 @@ class _CountriesFieldState extends State<CountriesField>{
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      focusNode: this._focusNode,
-      decoration: InputDecoration(
-          labelText: 'Country'
+    return CompositedTransformTarget(
+      link: this._layerLink,
+      child: TextFormField(
+        focusNode: this._focusNode,
+        decoration: InputDecoration(
+            labelText: 'Country'
+        ),
       ),
     );
   }

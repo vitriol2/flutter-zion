@@ -1,14 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutterbasicc/interactive_view/provider/interactiver_provider.dart';
+import 'package:provider/provider.dart';
 
 class InteractiveViewerOverlay extends StatefulWidget {
   final Widget child;
   final double maxScale;
+  bool isScaling;
+  BuildContext context;
 
-  const InteractiveViewerOverlay({
-    Key key,
-    @required this.child,
-    this.maxScale,
-  }) : super(key: key);
+  InteractiveViewerOverlay(
+      {Key key,
+      @required this.child,
+      this.maxScale,
+      this.isScaling,
+      this.context})
+      : super(key: key);
 
   @override
   _InteractiveViewerOverlayState createState() =>
@@ -48,24 +55,56 @@ class _InteractiveViewerOverlayState extends State<InteractiveViewerOverlay>
   }
 
   Widget buildViewer(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    bool isScaling =
+        Provider.of<InteractiveViewerProvider>(widget.context).getIsScaling() ??
+            false;
+
     return InteractiveViewer(
         key: viewerKey,
         transformationController: controller,
         panEnabled: false,
         maxScale: widget.maxScale ?? 2.5,
-        child: widget.child,
+        child: Stack(
+          children: [
+            LayoutBuilder(builder: (context, constraints) {
+              print('isScaling: ' + isScaling.toString());
+              return isScaling
+                  ? Container(
+                color: Colors.black,
+                width: _width,
+                height: _height,
+              )
+                  : Container();
+            }),
+            Container(
+//width: isScaling ? 600 : null,
+//height: isScaling ? 900 : null,
+//        width: 600,
+//        height:700,
+                child: Container(
+                    width: _width,
+                    height: _width,
+                    child: Center(child: widget.child))),
+
+          ],
+        ),
         onInteractionStart: (details) {
           if (placeholder != null) return;
 
           setState(() {
             var renderObject =
-            viewerKey.currentContext.findRenderObject() as RenderBox;
+                viewerKey.currentContext.findRenderObject() as RenderBox;
             placeholder = Rect.fromPoints(
               renderObject.localToGlobal(Offset.zero),
               renderObject
                   .localToGlobal(renderObject.size.bottomRight(Offset.zero)),
             );
           });
+          Provider.of<InteractiveViewerProvider>(widget.context, listen: false)
+              .setIsScaling(true);
+          print('start context: ' + context.toString());
 
           entry = OverlayEntry(
             builder: (context) {
@@ -89,6 +128,10 @@ class _InteractiveViewerOverlayState extends State<InteractiveViewerOverlay>
             duration: Duration(milliseconds: 250),
             curve: Curves.ease,
           );
+
+          print(widget.context);
+          Provider.of<InteractiveViewerProvider>(widget.context, listen: false)
+              .setIsScaling(false);
         });
   }
 
