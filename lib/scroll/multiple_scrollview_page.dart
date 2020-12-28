@@ -6,36 +6,26 @@ class MultipleScrollViewPage extends StatelessWidget {
    Widget build(BuildContext context) {
      double _width = MediaQuery.of(context).size.width;
      return Scaffold(
-       body: NestedScrollView(
-         // Setting floatHeaderSlivers to true is required in order to float
-         // the outer slivers over the inner scrollable.
-         floatHeaderSlivers: true,
-         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-           return <Widget>[
-             SliverAppBar(
-               title: Container(
-                 width: _width,
-                   height: _width,
-                   color: Colors.black,
-                   child: Text('Floating Nested SliverAppBar')),
-               floating: true,
-               pinned: true,
-
-               expandedHeight: 200.0,
-               forceElevated: innerBoxIsScrolled,
+       body: CustomScrollView(
+         slivers: [
+           SliverPersistentHeader(
+              delegate: MyHeader(
+                  maxHeight: 300,
+                  minHeight: 300
+              ),
+           ),
+         SliverList(
+             delegate: SliverChildBuilderDelegate(
+                 (context, index) {
+                   return Container(
+                     height: 50,
+                     child: Center(child: Text('Item $index')),
+                   );
+                 },
+               childCount: 30
              ),
-           ];
-         },
-         body: ListView.builder(
-           padding: const EdgeInsets.all(8),
-           itemCount: 30,
-           itemBuilder: (BuildContext context, int index) {
-             return Container(
-               height: 50,
-               child: Center(child: Text('Item $index')),
-             );
-           }
          )
+           ]
        )
      );
    }
@@ -105,4 +95,35 @@ class MultipleScrollViewPage extends StatelessWidget {
 //    ),
 //    );
 //  }
+}
+
+class MyHeader extends SliverPersistentHeaderDelegate {
+  double maxHeight;
+  double minHeight;
+  MyHeader({
+    this.maxHeight,
+    this.minHeight
+});
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
+    double _width = MediaQuery.of(context).size.width;
+    return Container(
+      width: _width,
+      height: maxHeight,
+      color: Colors.blue,
+    );
+  }
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
+  }
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  double get minExtent => minHeight;
 }
