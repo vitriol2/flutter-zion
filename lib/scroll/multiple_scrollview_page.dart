@@ -14,17 +14,17 @@ class MultipleScrollViewPage extends StatelessWidget {
                   minHeight: 300
               ),
            ),
-//         SliverList(
-//             delegate: SliverChildBuilderDelegate(
-//                 (context, index) {
-//                   return Container(
-//                     height: 50,
-//                     child: Center(child: Text('Item $index')),
-//                   );
-//                 },
-//               childCount: 30
-//             ),
-//         )
+         SliverList(
+             delegate: SliverChildBuilderDelegate(
+                 (context, index) {
+                   return Container(
+                     height: 50,
+                     child: Center(child: Text('Item $index')),
+                   );
+                 },
+               childCount: 30
+             ),
+         )
            ]
        )
      );
