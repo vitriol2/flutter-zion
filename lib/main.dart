@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       ),
       home: ChangeNotifierProvider<EditImageProvider>(
         create: (_) => EditImageProvider(),
-          child: MultipleScrollViewPage()),
+          child: InitialPage()),
       debugShowCheckedModeBanner: false,
     );
   }

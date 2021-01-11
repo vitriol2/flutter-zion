@@ -205,6 +205,7 @@ class InitialPage extends StatelessWidget {
     sController = ScrollController(initialScrollOffset: scrollOffset)
     ..addListener(() {
       scrollOffset = sController.position.pixels;
+      _handleScrollEvent(sController, context);
     });
 
     try {
@@ -236,182 +237,170 @@ class InitialPage extends StatelessWidget {
                       List<Photo> photoList = value.getPhotoList() ?? [];
                       List<int> selectedPhotoList =
                           value.getSelectedPhotoList() ?? [];
-                      return Column(
-                        mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Container(
-                              width: _width,
-                                height: _width * 0.162,
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          size: _width * 0.07,
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Text(
-                                          '리뷰 사진 선택',
-                                        style: TextStyle(
-                                          fontSize: _width * 0.053
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Provider.of<EditImageProvider>(
-                                          context,
-                                          listen: false)
-                                            .determineSelectedPhoto();
-                                        Navigator.of(context).pop('적용');
-                                      },
-                                      child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          padding: EdgeInsets.all(
-                                            _width * 0.053
-                                          ),
-                                          child: Text('적용',
-                                            style: TextStyle(
-                                              fontSize: _width * 0.043
-                                            )
-                                          ),
-                                        ),
-                                      ),
-                                    )
-
-                                  ],
-                                ),
-                            ),
-                            NotificationListener<ScrollNotification>(
-                              onNotification: (ScrollNotification scroll) {
-                                _handleScrollEvent(scroll, context);
-                                return;
-                              },
-                              child: Container(
-                                width: _width,
-                                height: _height -
-                                    safeAreaTop -
-                                    safeAreaBottom -
-                                    _width * 0.162,
-                                child: GridView.builder(
-                                  controller: sController,
-                                  itemCount: photoList.length,
-                                  gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3),
-                                  itemBuilder: (context, index) {
-                                    try {
-                                      return Container(
-                                        child: Stack(
-                                          children: [
-                                            photoList[index].widget,
-                                            Center(
-                                              child: Container(
-                                                width: _width / 3,
-                                                height: _width / 3,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: photoList[index]
-                                                            .isSelected
-                                                            ? Theme.of(context)
-                                                            .primaryColor
-                                                            : Colors
-                                                            .transparent,
-                                                        width: _width * 0.01)),
-                                              ),
+                      return CustomScrollView(
+                        controller: sController,
+//                        mainAxisSize: MainAxisSize.max,
+                          slivers: [
+//                            Container(
+//                              width: _width,
+//                                height: _width * 0.162,
+//                                child: Stack(
+//                                  children: [
+//                                    Align(
+//                                      alignment: Alignment.centerLeft,
+//                                      child: GestureDetector(
+//                                        onTap: () {
+//                                          Navigator.of(context).pop();
+//                                        },
+//                                        child: Icon(
+//                                          Icons.clear,
+//                                          size: _width * 0.07,
+//                                        ),
+//                                      ),
+//                                    ),
+//                                    Center(
+//                                      child: Text(
+//                                          '리뷰 사진 선택',
+//                                        style: TextStyle(
+//                                          fontSize: _width * 0.053
+//                                        ),
+//                                      ),
+//                                    ),
+//                                    GestureDetector(
+//                                      onTap: () {
+//                                        Provider.of<EditImageProvider>(
+//                                          context,
+//                                          listen: false)
+//                                            .determineSelectedPhoto();
+//                                        Navigator.of(context).pop('적용');
+//                                      },
+//                                      child: Align(
+//                                        alignment: Alignment.centerRight,
+//                                        child: Container(
+//                                          padding: EdgeInsets.all(
+//                                            _width * 0.053
+//                                          ),
+//                                          child: Text('적용',
+//                                            style: TextStyle(
+//                                              fontSize: _width * 0.043
+//                                            )
+//                                          ),
+//                                        ),
+//                                      ),
+//                                    )
+//
+//                                  ],
+//                                ),
+//                            ),
+                            SliverGrid(
+                                gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3),
+                                delegate: SliverChildBuilderDelegate((context, index) {
+                                  try {
+                                    return Container(
+                                      child: Stack(
+                                        children: [
+                                          photoList[index].widget,
+                                          Center(
+                                            child: Container(
+                                              width: _width / 3,
+                                              height: _width / 3,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: photoList[index]
+                                                          .isSelected
+                                                          ? Theme.of(context)
+                                                          .primaryColor
+                                                          : Colors
+                                                          .transparent,
+                                                      width: _width * 0.01)),
                                             ),
-                                            Positioned(
-                                                top: 0,
-                                                right: 0,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    Provider.of<EditImageProvider>(
-                                                        context,
-                                                        listen: false)
-                                                        .setIsSelected(index);
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                        top: _width * 0.02,
-                                                        right: _width * 0.02,
-                                                        left: _width * 0.02,
-                                                        bottom: _width * 0.02
-                                                    ),
-                                                    alignment:
-                                                    Alignment.topRight,
-                                                    width: _width * 0.1,
-                                                    height: _width * 0.1,
+                                          ),
+                                          Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Provider.of<EditImageProvider>(
+                                                      context,
+                                                      listen: false)
+                                                      .setIsSelected(index);
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      top: _width * 0.02,
+                                                      right: _width * 0.02,
+                                                      left: _width * 0.02,
+                                                      bottom: _width * 0.02
+                                                  ),
+                                                  alignment:
+                                                  Alignment.topRight,
+                                                  width: _width * 0.1,
+                                                  height: _width * 0.1,
 //                                                    color: Colors.black,
-                                                    child: Container(
-                                                        width: _width * 0.053,
-                                                        height: _width * 0.053,
-                                                        decoration: BoxDecoration(
-                                                            shape:
-                                                            BoxShape.circle,
-                                                            border: Border.all(
-                                                                color: photoList[
-                                                                index]
-                                                                    .isSelected
-                                                                    ? Colors
-                                                                    .transparent
-                                                                    : Color.fromRGBO(
-                                                                    255,
-                                                                    255,
-                                                                    255,
-                                                                    0.7),
-                                                                width: _width *
-                                                                    0.005),
-                                                            color: photoList[index]
-                                                                .isSelected
-                                                                ? Theme.of(context)
-                                                                .primaryColor
-                                                                : Colors
-                                                                .transparent),
-                                                        child:
-                                                        photoList[index]
-                                                            .isSelected
-                                                            ? Center(
-                                                          child: Text(
-                                                            (selectedPhotoList.indexOf(index) +
-                                                                1)
-                                                                .toString(),
-                                                            textAlign:
-                                                            TextAlign
-                                                                .center,
-                                                            style: Theme.of(context).textTheme.headline3.copyWith(
-                                                                height:
-                                                                1.2,
-                                                                fontSize: _width *
-                                                                    0.035,
-                                                                color:
-                                                                Colors.white),
+                                                  child: Container(
+                                                      width: _width * 0.053,
+                                                      height: _width * 0.053,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                          BoxShape.circle,
+                                                          border: Border.all(
+                                                              color: photoList[
+                                                              index]
+                                                                  .isSelected
+                                                                  ? Colors
+                                                                  .transparent
+                                                                  : Color.fromRGBO(
+                                                                  255,
+                                                                  255,
+                                                                  255,
+                                                                  0.7),
+                                                              width: _width *
+                                                                  0.005),
+                                                          color: photoList[index]
+                                                              .isSelected
+                                                              ? Theme.of(context)
+                                                              .primaryColor
+                                                              : Colors
+                                                              .transparent),
+                                                      child:
+                                                      photoList[index]
+                                                          .isSelected
+                                                          ? Center(
+                                                        child: Text(
+                                                          (selectedPhotoList.indexOf(index) +
+                                                              1)
+                                                              .toString(),
+                                                          textAlign:
+                                                          TextAlign
+                                                              .center,
+                                                          style: Theme.of(context).textTheme.headline3.copyWith(
+                                                              height:
+                                                              1.2,
+                                                              fontSize: _width *
+                                                                  0.035,
+                                                              color:
+                                                              Colors.white),
 //                                                                        style: TextStyle(
 //                                                                          height: 1.0,
 //                                                                            fontSize: _width * 0.03,
 //                                                                            color: Colors.white
 //                                                                        ),
-                                                          ),
-                                                        )
-                                                            : null),
-                                                  ),
-                                                )),
-                                          ],
-                                        ),
-                                      );
-                                    } catch (err) {
-                                      print('err: ' + err.toString());
-                                      return Container();
-                                    }
-                                  },
-                                ),
+                                                        ),
+                                                      )
+                                                          : null),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                    );
+                                  } catch (err) {
+                                    print('err: ' + err.toString());
+                                    return Container();
+                                  }
+                                },
+                                  childCount: photoList.length
                               ),
                             )
                           ],
@@ -430,8 +419,8 @@ class InitialPage extends StatelessWidget {
     }
   }
 
-  void _handleScrollEvent(ScrollNotification scroll, BuildContext context) async{
-    if(scroll.metrics.pixels / scroll.metrics.maxScrollExtent > 0.33) {
+  void _handleScrollEvent(ScrollController scroll, BuildContext context) async{
+    if(scroll.position.pixels / scroll.position.maxScrollExtent > 0.5) {
       if(currentPage == lastPage) {
         await _fetchNewMedia(context);
         await Future.delayed(Duration(milliseconds: 500));

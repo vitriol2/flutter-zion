@@ -9,6 +9,7 @@ class MultipleScrollViewPage extends StatelessWidget {
        body: CustomScrollView(
          slivers: [
            SliverPersistentHeader(
+             floating: true,
               delegate: MyHeader(
                   maxHeight: 300,
                   minHeight: 300
