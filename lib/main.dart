@@ -3,6 +3,7 @@ import 'package:flutterbasicc/edit_image/provider/edit_image_provider.dart';
 import 'package:flutterbasicc/scroll/multiple_scrollview_page.dart';
 import 'package:flutterbasicc/scroll/nested_scroll_ex.dart';
 import 'package:provider/provider.dart';
+import 'bottom_navigation/bottom_navigation_page.dart';
 import 'edit_image/edit_image_page.dart';
 import 'edit_image/initial_page.dart';
 import 'image_pick/image_pick_page.dart';
@@ -18,8 +19,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ChangeNotifierProvider<EditImageProvider>(
-        create: (_) => EditImageProvider(),
-          child: InitialPage()),
+          create: (_) => EditImageProvider(),
+          child: BottomNavigationMainPage()),
       debugShowCheckedModeBanner: false,
     );
   }
